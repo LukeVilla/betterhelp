@@ -1,0 +1,13 @@
+name: Compile
+on: [push, workflow_dispatch]
+jobs:
+  compile:
+    name: Compile normally
+    runs-on: ubuntu-latest
+    steps:
+    - run: g++ -o betterhelp betterhelp.cpp
+  compiledebug:
+    name: Compile with debug symbols
+    runs-on: ubuntu-latest
+    steps:
+    - run: g++ -g -o betterhelp betterhelp.cpp
