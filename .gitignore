@@ -1,6 +1,7 @@
 /a.out
-/vscode/settings.json
+.vscode/settings.json
 .vscode/launch.json
-betterhelp.cpp
 .bhprogs
 .bhmans
+includes/argengine.cpp:Zone.Identifier
+includes/argengine.hpp:Zone.Identifier
