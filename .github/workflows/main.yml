@@ -5,9 +5,11 @@ jobs:
     name: Compile normally
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - run: g++ -o betterhelp betterhelp.cpp
   compiledebug:
     name: Compile with debug symbols
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - run: g++ -g -o betterhelp betterhelp.cpp
