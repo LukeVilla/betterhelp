@@ -6,10 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - run: ls
+    - run: pwd
     - run: g++ -o betterhelp betterhelp.cpp
   compiledebug:
     name: Compile with debug symbols
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - run: ls
+    - run: pwd
     - run: g++ -g -o betterhelp betterhelp.cpp
