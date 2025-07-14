@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
     string temp;
     bool nocache = false;
     bool rebuildcache = false;
+    vector<string> filter;
 
     juzzlin::Argengine parser(argc, argv);
     parser.addOption({"-n", "--no-cache", "--nocache"}, [&nocache] {
@@ -91,29 +92,42 @@ int main(int argc, char **argv) {
     parser.addOption({"-r", "--rebuild-cache", "--rebuildcache"}, [&rebuildcache] {
         rebuildcache = true;
     });
+    parser.setPositionalArgumentCallback([&filter] (vector<string> args) {
+        filter = args;
+    });
     parser.parse();
+    
+    if (rebuildcache) {
+        goto rebuild_cache;
+    };
 
     if (nocache || NOCACHE) {
-        for (auto entry : fs::directory_iterator("/bin")) {
-            temp = entry.path();
-            algo::erase_all(temp, "/bin/");
-            // std::cout << temp << std::endl;
-            commands.emplace_back(temp);
-        };
+        if (filter.size() == 0) {
+            for (auto entry : fs::directory_iterator("/bin")) {
+                temp = entry.path();
+                algo::erase_all(temp, "/bin/");
+                // std::cout << temp << std::endl;
+                commands.emplace_back(temp);
+            };
+        }
+        else {
+            commands = filter;
+        }
         for (string name : commands) {
             string desc = getdesc(name);
             cout << desc << endl;
         };
         return 0;
     };
-
-    if (rebuildcache) {
-        goto rebuild_cache;
-    };
     
     if (exists(".bhprogs")) {
         cout << "Program cache exists." << endl;
-        commands = readnsv(".bhprogs");
+        if (filter.size() == 0) {
+            commands = readnsv(".bhprogs");
+        }
+        else {
+            commands = filter;
+        }
     }
     else {
         cout << "Program cache does not exist!" << endl;
@@ -124,7 +138,7 @@ int main(int argc, char **argv) {
         catch(int e)
         {
             // std::cerr << e.what() << '\n';
-            cerr << "Error creating program cache. If this problem continues, try using the --no-cache option." << endl;
+            cerr << "Error creating program cache. If this problem continues, try using the --nocache option." << endl;
             return 1;
         }
         for (auto entry : fs::directory_iterator("/bin")) {
