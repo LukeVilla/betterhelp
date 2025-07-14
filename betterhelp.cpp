@@ -16,10 +16,7 @@ namespace fs = std::filesystem;
 namespace algo = boost::algorithm;
 namespace json = boost::json;
 
-struct progdesc {
-    string prog;
-    string desc;
-};
+#define NOCACHE false
 
 vector<string> readnsv(string filepath) {
     vector<string> vals;
@@ -96,7 +93,7 @@ int main(int argc, char **argv) {
     });
     parser.parse();
 
-    if (nocache) {
+    if (nocache || NOCACHE) {
         for (auto entry : fs::directory_iterator("/bin")) {
             temp = entry.path();
             algo::erase_all(temp, "/bin/");
