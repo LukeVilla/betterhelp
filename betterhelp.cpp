@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
     string temp;
     bool nocache = false;
     bool rebuildcache = false;
+    bool verbose = false;
     vector<string> filter;
 
     juzzlin::Argengine parser(argc, argv);
@@ -91,6 +92,9 @@ int main(int argc, char **argv) {
     });
     parser.addOption({"-r", "--rebuild-cache", "--rebuildcache"}, [&rebuildcache] {
         rebuildcache = true;
+    });
+    parser.addOption({"-v", "--verbose"}, [&verbose] {
+        verbose = true;
     });
     parser.setPositionalArgumentCallback([&filter] (vector<string> args) {
         filter = args;
@@ -121,7 +125,9 @@ int main(int argc, char **argv) {
     };
     
     if (exists(".bhprogs")) {
-        cout << "Program cache exists." << endl;
+        if (verbose) {
+            cout << "Program cache exists." << endl;
+        }
         if (filter.size() == 0) {
             commands = readnsv(".bhprogs");
         }
@@ -155,7 +161,9 @@ int main(int argc, char **argv) {
         progcache.close();
     }
     if (exists(".bhmans")) {
-        cout << "Description cache exists." << endl;
+        if (verbose) {
+            cout << "Description cache exists." << endl;
+        }
         json::value jvdescs;
         string descs;
         string temp;
