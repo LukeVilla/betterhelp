@@ -19,6 +19,10 @@ namespace json = boost::json;
 #define NOCACHE false
 #define PRINT(x) cout << x << endl;
 
+void log(string output, bool verbose) {
+    if (verbose) {PRINT(output)}
+}
+
 vector<string> readnsv(string filepath) {
     vector<string> vals;
     string temp;
@@ -123,9 +127,7 @@ int main(int argc, char **argv) {
     };
     
     if (exists(".bhprogs")) {
-        if (verbose) {
-            cout << "Program cache exists." << endl;
-        }
+        log("Program cache exists.",verbose);
         if (filter.size() == 0) {
             commands = readnsv(".bhprogs");
         }
@@ -162,9 +164,7 @@ int main(int argc, char **argv) {
         goto rebuild_cache;
     };
     if (exists(".bhmans")) {
-        if (verbose) {
-            cout << "Description cache exists." << endl;
-        }
+        log("Description cache exists.",verbose);
         json::value jvdescs;
         string descs;
         string temp;
