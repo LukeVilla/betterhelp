@@ -17,6 +17,7 @@ namespace algo = boost::algorithm;
 namespace json = boost::json;
 
 #define NOCACHE false
+#define PRINT(x) cout << x << endl;
 
 vector<string> readnsv(string filepath) {
     vector<string> vals;
@@ -101,10 +102,7 @@ int main(int argc, char **argv) {
     });
     parser.parse();
     
-    if (rebuildcache) {
-        goto rebuild_cache;
-    };
-
+    
     if (nocache || NOCACHE) {
         if (filter.size() == 0) {
             for (auto entry : fs::directory_iterator("/bin")) {
@@ -160,6 +158,9 @@ int main(int argc, char **argv) {
         };
         progcache.close();
     }
+    if (rebuildcache) {
+        goto rebuild_cache;
+    };
     if (exists(".bhmans")) {
         if (verbose) {
             cout << "Description cache exists." << endl;
@@ -191,6 +192,7 @@ int main(int argc, char **argv) {
         rebuild_cache:
         try
         {
+            filesystem::remove(".bhmans");
             createfile(".bhmans");
         }
         catch(int e)
@@ -214,6 +216,5 @@ int main(int argc, char **argv) {
         bhmans << json::serialize(descs);
         bhmans.close();
     }      
-    // vector<string> commands = {"ls", "cat", "jpackage"};
     return 0;
 }
