@@ -51,7 +51,7 @@ bool exists(string filename) {
 
 string runcmd(string command) {
     string output;
-    string cmd = "man " + command;
+    string cmd = command;
     FILE *pipe = popen(cmd.c_str(), "r");
     if (!pipe) {
         cerr << "Error opening pipe" << endl;
@@ -69,7 +69,7 @@ string getdesc(string command) {
     string temp;
     vector<string> lines;
     string desc;
-    string manpage = runcmd(command);
+    string manpage = runcmd("man "+command);
     stringstream manstream(manpage);
     while (getline(manstream, temp, '\n')) {
         lines.emplace_back(temp);
@@ -89,6 +89,7 @@ int main(int argc, char **argv) {
     bool nocache = false;
     bool rebuildcache = false;
     bool verbose = false;
+    bool hasFilter = false;
     vector<string> filter;
 
     juzzlin::Argengine parser(argc, argv);
@@ -117,6 +118,7 @@ int main(int argc, char **argv) {
             };
         }
         else {
+            hasFilter = true;
             commands = filter;
         }
         for (string name : commands) {
@@ -132,6 +134,7 @@ int main(int argc, char **argv) {
             commands = readnsv(".bhprogs");
         }
         else {
+            hasFilter = true;
             commands = filter;
         }
     }
@@ -163,6 +166,10 @@ int main(int argc, char **argv) {
     if (rebuildcache) {
         goto rebuild_cache;
     };
+    if (hasFilter) {
+        PRINT(runcmd(filter[0]+" --help"));
+        return 0;
+    }
     if (exists(".bhmans")) {
         log("Description cache exists.",verbose);
         json::value jvdescs;
